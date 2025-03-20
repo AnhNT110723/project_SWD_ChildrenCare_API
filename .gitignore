@@ -1,0 +1,16 @@
+﻿#build và output
+bin/
+obj/
+
+# Cấu hình môi trường
+.env
+appsettings.Development.json
+
+#user settings
+.vs/
+*.user
+*.suo
+
+#othres
+node_modules/
+*.log
