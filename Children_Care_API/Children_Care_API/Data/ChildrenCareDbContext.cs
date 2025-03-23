@@ -18,6 +18,9 @@ namespace Children_Care_API.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Slider> Sliders { get; set; }
+        public DbSet<Setting> Settings { get; set; }
+        public DbSet<MedicalExamination> MedicalExaminations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -83,6 +86,25 @@ namespace Children_Care_API.Data
                 .HasOne(b => b.Author)
                 .WithMany(u => u.Blogs)
                 .HasForeignKey(b => b.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Slider
+            modelBuilder.Entity<Slider>();
+
+            // Setting
+            modelBuilder.Entity<Setting>();
+
+            // Medical Examination Relationships
+            modelBuilder.Entity<MedicalExamination>()
+                .HasOne(m => m.Reservation)
+                .WithMany(r => r.MedicalExaminations)
+                .HasForeignKey(m => m.ReservationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MedicalExamination>()
+                .HasOne(m => m.Doctor)
+                .WithMany(u => u.MedicalExaminations)
+                .HasForeignKey(m => m.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
