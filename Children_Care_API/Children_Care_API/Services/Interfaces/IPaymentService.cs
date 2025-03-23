@@ -1,19 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Children_Care_API.Models;
+using Microsoft.AspNetCore.Mvc;
 using PaymentAPI.Models;
 
 namespace Children_Care_API.Services.Interfaces
 {
     public interface IPaymentService
     {
-        Task<IEnumerable<PaymentDetail>> GetPaymentDetails();
+        Task<IEnumerable<Payment>> GetPayments();
 
-        Task<PaymentDetail> GetPaymentDetailById(int id);
+        Task<Payment> GetPaymentById(int id);
 
-        Task<IEnumerable<PaymentDetail>> UpdatePaymentDetail(int id, PaymentDetail paymentDetail);
+        Task<IEnumerable<Payment>> UpdatePayment(int id, Payment Payment);
 
-        Task<IEnumerable<PaymentDetail>> AddPaymentDetail(PaymentDetail paymentDetail);
+        Task<IEnumerable<Payment>> AddPayment(Payment Payment);
 
-        Task<IEnumerable<PaymentDetail>> DeletePaymentDetail(int id);
+        Task<IEnumerable<Payment>> DeletePayment(int id);
 
     }
 }

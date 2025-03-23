@@ -1,4 +1,6 @@
-﻿using Children_Care_API.Repositories.Interfaces;
+﻿using Children_Care_API.DTOs;
+using Children_Care_API.Models;
+using Children_Care_API.Repositories.Interfaces;
 using Children_Care_API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using PaymentAPI.Models;
@@ -12,39 +14,39 @@ namespace Children_Care_API.Services.Implementations
         {
             _paymentRepo = paymentRepo;   
         }
-        public async Task<IEnumerable<PaymentDetail>> AddPaymentDetail(PaymentDetail paymentDetail)
+        public async Task<IEnumerable<Payment>> AddPayment(Payment Payment)
         {
-             await _paymentRepo.AddAsync(paymentDetail);
+             await _paymentRepo.AddAsync(Payment);
             return await _paymentRepo.GetAllAsync(); ;
         }
 
-        public async Task<IEnumerable<PaymentDetail>> DeletePaymentDetail(int id)
+        public async Task<IEnumerable<Payment>> DeletePayment(int id)
         {
-            var paymentDetail = await _paymentRepo.GetByIdAsync(id);
-            if (paymentDetail == null)
+            var Payment = await _paymentRepo.GetByIdAsync(id);
+            if (Payment == null)
             {
                 throw new KeyNotFoundException("Payment detail not found");
             }
 
-            await _paymentRepo.DeleteAsync(paymentDetail);
+            await _paymentRepo.DeleteAsync(Payment);
 
             return await _paymentRepo.GetAllAsync();
 
         }
 
-        public async Task<PaymentDetail> GetPaymentDetailById(int id)
+        public async Task<Payment> GetPaymentById(int id)
         {
             return await _paymentRepo.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<PaymentDetail>> GetPaymentDetails()
+        public async Task<IEnumerable<Payment>> GetPayments()
         {
             return await _paymentRepo.GetAllAsync();
         }
 
-        public async Task<IEnumerable<PaymentDetail>> UpdatePaymentDetail(int id, PaymentDetail paymentDetail)
+        public async Task<IEnumerable<Payment>> UpdatePayment(int id, Payment Payment)
         {
-            if (id != paymentDetail.PaymentDetailId)
+            if (id != Payment.Id)
             {
                 throw new ArgumentException("ID mismatch");
             }
@@ -54,7 +56,7 @@ namespace Children_Care_API.Services.Implementations
                 throw new KeyNotFoundException("Payment detail not found");
             }
 
-            _paymentRepo.Update(paymentDetail);
+            _paymentRepo.Update(Payment);
             await _paymentRepo.SaveChangesAsync();
 
             return await _paymentRepo.GetAllAsync();
