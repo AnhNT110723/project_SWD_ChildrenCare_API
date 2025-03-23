@@ -1,6 +1,7 @@
 ﻿using Children_Care_API.Data;
 using Children_Care_API.DTOs;
 using Children_Care_API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace Children_Care_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class SlidersController : ControllerBase
     {
         private readonly ChildrenCareDbContext _context;
