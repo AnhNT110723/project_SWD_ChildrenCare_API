@@ -16,6 +16,9 @@ namespace Children_Care_API.Models
         public int ServiceId { get; set; }
 
         [Required]
+        public string ChildName { get; set; } = string.Empty;
+
+		[Required]
         public DateTime ReservationDate { get; set; }
 
         [Required, MaxLength(20)]
