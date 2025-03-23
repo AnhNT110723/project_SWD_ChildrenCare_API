@@ -1,7 +1,7 @@
-﻿namespace Children_Care_API.DTOs
+﻿namespace Children_Care_API.DTOs.Reservations
 {
-	public class ReservationDto
-	{
+    public class BaseReservationDto
+    {
 		public int CustomerId { get; set; }
 		public int ServiceId { get; set; }
 		public string ChildName { get; set; } = string.Empty;
