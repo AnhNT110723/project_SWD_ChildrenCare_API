@@ -29,5 +29,6 @@ namespace Children_Care_API.Models
         public ICollection<Prescription>? PrescriptionsAsDoctor { get; set; } // Đơn thuốc do bác sĩ kê
         public ICollection<Prescription>? PrescriptionsAsCustomer { get; set; } // Đơn thuốc của khách hàng
         public ICollection<Blog>? Blogs { get; set; } // Blog do user viết
+        public ICollection<MedicalExamination>? MedicalExaminations { get; set; }
     }
 }

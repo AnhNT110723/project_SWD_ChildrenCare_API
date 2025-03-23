@@ -31,5 +31,6 @@ namespace Children_Care_API.Models
         public Service? Service { get; set; }
         public ICollection<Prescription>? Prescriptions { get; set; }
         public ICollection<Payment>? Payments { get; set; }
+        public ICollection<MedicalExamination>? MedicalExaminations { get; set; }
     }
 }
