@@ -8,91 +8,103 @@ using Microsoft.EntityFrameworkCore;
 using Children_Care_API.Data;
 using PaymentAPI.Models;
 using Children_Care_API.Services.Interfaces;
+using Children_Care_API.Models;
+using Children_Care_API.DTOs;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Children_Care_API.Models.Enums;
 
 namespace Children_Care_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentDetailController : ControllerBase
+    public class PaymentController : ControllerBase
     {
         private readonly ChildrenCareDbContext _context;
         private readonly IPaymentService _paymentService;
 
-        public PaymentDetailController(ChildrenCareDbContext context, IPaymentService paymentService)
+        public PaymentController(ChildrenCareDbContext context, IPaymentService paymentService)
         {
             _paymentService = paymentService;
             _context = context;
         }
 
-        // GET: api/PaymentDetail
+        // GET: api/Payment
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaymentDetail>>> GetPaymentDetails()
+        public async Task<ActionResult<IEnumerable<PaymentDto>>> GetPayments()
         {
-            var paymentDetails = await _paymentService.GetPaymentDetails();
-            return Ok(paymentDetails);
+            var Payments = await _context.Payments.Select(x => new PaymentDto
+            {
+                Id = x.Id,
+                Amount = x.Amount,
+                PaymentMethod = x.PaymentMethod.ToString(),
+                Status = x.Status.ToString(),
+                CreatedAt = x.CreatedAt
+
+            }).ToListAsync();
+
+            return Ok(Payments);
         }
 
-        // GET: api/PaymentDetail/5
+        // GET: api/Payment/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PaymentDetail>> GetPaymentDetail(int id)
+        public async Task<ActionResult<Payment>> GetPayment(int id)
         {
-            var paymentDetail = await _paymentService.GetPaymentDetailById(id);
+            var Payment = await _paymentService.GetPaymentById(id);
 
-            if (paymentDetail == null)
+            if (Payment == null)
             {
                 return NotFound("Payment detail not found");
             }
 
-            return Ok(paymentDetail);
+            return Ok(Payment);
         }
 
-        // PUT: api/PaymentDetail/5
+        // PUT: api/Payment/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPaymentDetail(int id, PaymentDetail paymentDetail)
+        public async Task<IActionResult> PutPayment(int id, PaymentDto paymentDto)
         {
-            try
+            var payment = await _context.Payments.FindAsync(id);
+            if (payment == null)
             {
-                var result = await _paymentService.UpdatePaymentDetail(id, paymentDetail);
-                return Ok(result);
+                return NotFound();
             }
-            catch (ArgumentException)
-            {
-                return BadRequest("ID mismatch");
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("Payment detail not found");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            payment.Amount = paymentDto.Amount;
+            payment.PaymentMethod = Enum.Parse<PaymentMethod>(paymentDto.PaymentMethod);
+             payment.Status = Enum.Parse<PaymentStatus>(paymentDto.Status);
+              
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
-        // POST: api/PaymentDetail
+        // POST: api/Payment
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PaymentDetail>> PostPaymentDetail(PaymentDetail paymentDetail)
+        public async Task<ActionResult<Payment>> PostPayment(PaymentDto paymentDto)
         {
-            try
+            if (paymentDto == null)
             {
-                var result = await _paymentService.AddPaymentDetail(paymentDetail);
-                return Ok(result);
+                return BadRequest();
             }
-            catch (Exception ex)
+            var payment = new Payment
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+                ReservationId = 3,
+                Amount = paymentDto.Amount,
+                PaymentMethod = Enum.Parse<PaymentMethod>(paymentDto.PaymentMethod),
+                Status = Enum.Parse<PaymentStatus>(paymentDto.Status),
+            };
+            _context.Payments.Add(payment);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
-        // DELETE: api/PaymentDetail/5
+        // DELETE: api/Payment/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePaymentDetail(int id)
+        public async Task<IActionResult> DeletePayment(int id)
         {
             try
             {
-                var result = await _paymentService.DeletePaymentDetail(id);
+                var result = await _paymentService.DeletePayment(id);
                 return Ok(result);
             }
             catch (KeyNotFoundException)
