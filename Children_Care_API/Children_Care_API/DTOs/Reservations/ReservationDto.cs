@@ -10,6 +10,8 @@ namespace Children_Care_API.DTOs.Reservations
         public DateTime ReservationDate { get; set; }
         public DateTime CreateAt { get; set; }
         public string Status { get; set; }
+        public decimal Amount { get; set; }
+
 
     }
 }

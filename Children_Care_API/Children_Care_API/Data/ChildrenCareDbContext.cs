@@ -21,7 +21,7 @@ namespace Children_Care_API.Data
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<MedicalExamination> MedicalExaminations { get; set; }
-
+        public DbSet<MedicalPrescription> MedicalPrescriptions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // User - Unique Email

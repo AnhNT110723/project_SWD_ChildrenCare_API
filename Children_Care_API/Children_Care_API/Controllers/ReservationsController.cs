@@ -51,14 +51,29 @@ namespace Children_Care_API.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Reservation>> GetReservation(int id)
 		{
-			var reservation = await _context.Reservations.FindAsync(id);
+			var reservation = await _context.Reservations
+				.Include(r => r.Service)
+				.Include(r => r.Customer)
+				.Where(r => r.Id == id)
+				.Select(r => new ReservationDto
+				{
+					Id = r.Id,
+					ServiceName = r.Service.Name,
+					CustomerName = r.Customer.FullName,
+					ChildName = r.ChildName,
+					CreateAt = r.CreatedAt,
+					ReservationDate = r.ReservationDate,
+					Status = r.Status.ToString(),
+					Amount = r.Service.Price
+				}).FirstOrDefaultAsync();
+			
 
 			if (reservation == null)
 			{
 				return NotFound();
 			}
 
-			return reservation;
+			return Ok(reservation);
 		}
 
 		// PUT: api/Reservations/5
@@ -150,6 +165,21 @@ namespace Children_Care_API.Controllers
 				})
 			.ToListAsync();
 			return Ok(reservations);
+		}
+
+		[HttpPut("{id}/confirm")]
+		public async Task<IActionResult> ConfirmReservation(int id)
+		{
+			var reservation = await _context.Reservations.FindAsync(id);
+			if (reservation == null)
+			{
+				return NotFound("Reservation not found.");
+			}
+
+			reservation.Status = ReservationStatus.Confirmed;
+			await _context.SaveChangesAsync();
+
+			return Ok(new { message = "Reservation confirmed successfully.", reservation });
 		}
 
 		private bool ReservationExists(int id)
