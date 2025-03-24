@@ -88,7 +88,7 @@ namespace Children_Care_API.Controllers
             }
             var payment = new Payment
             {
-                ReservationId = 3,
+                ReservationId = 5,
                 Amount = paymentDto.Amount,
                 PaymentMethod = Enum.Parse<PaymentMethod>(paymentDto.PaymentMethod),
                 Status = Enum.Parse<PaymentStatus>(paymentDto.Status),
